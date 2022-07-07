@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Auth;
 
 class UserController extends Controller
 {  
@@ -16,9 +17,9 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json(['error'=>"Login không thành công!"], 401);      
         }
- 
+        $credentials = $request->only('email', 'password');
         $user = User::where("email",$request->email)->first();
-        if($user){
+        if(Auth::attempt($credentials)){
             return response()->json($user);
         }
         return response()->json(['error'=>"Login không thành công!"], 401);  
