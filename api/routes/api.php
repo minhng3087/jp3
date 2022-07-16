@@ -30,6 +30,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'register']);
 
 Route::get('/products', [ProductController::class, 'getAllProducts']);
+Route::get('/products/{id}', [ProductController::class, 'getSingleProduct']);
 Route::get('/orders', [OrderController::class, 'getAllOrders']);
 Route::get('/orders/{id}', [OrderController::class, 'getOrderDetail']);
 Route::post('/postOrder', [OrderController::class, 'postOrder']);

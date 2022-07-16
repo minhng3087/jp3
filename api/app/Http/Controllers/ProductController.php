@@ -12,4 +12,9 @@ class ProductController extends Controller
         $products = Product::all();
         return $products;
     }
+
+    public function getSingleProduct($id) {
+        $products = Product::findOrFail($id);
+        return $products;
+    }
 }
