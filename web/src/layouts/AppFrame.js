@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import DetailProduct from '../pages/DetailProduct';
 import Homepage from '../pages/Homepage';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
@@ -10,8 +11,9 @@ export default function AppFrame() {
     <Routes>
       <Route path="/" element={<WebLayout />}>
         <Route index element={<Homepage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<Signup />} />
+				<Route path='product/:id' element={<DetailProduct />} />
       </Route>
     </Routes>
   );
