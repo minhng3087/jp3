@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { Box, Flex, IconButton, Link, Text } from '@chakra-ui/react';
 import {
   HiOutlineSearch,
   HiOutlineShoppingCart
 } from 'react-icons/hi';
 import { Link as NavLink } from 'react-router-dom';
+import CartDrawer from './CartDrawer';
 
 export default function NavBar() {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const toggleCartOpen = useCallback(() => {
+    setIsCartOpen((prev) => !prev);
+  }, []);
+
+  const handleClickCart = useCallback(() => {
+    setIsCartOpen((prev) => !prev);
+  }, []);
+
   return (
     <Box bg="primaryColor" color="lightTextColor">
+      <CartDrawer isOpen={isCartOpen} onClose={toggleCartOpen} />
       <Box
         p="20px 5rem 8px"
         display="grid"
@@ -28,12 +40,16 @@ export default function NavBar() {
         <Text justifySelf="center" fontWeight="bold" fontSize="xl">
           Shopping Cart
         </Text>
-        <Flex justifySelf="right">
+        <Flex justifySelf="right" alignItems="center" gap={3}>
           <IconButton
+            onClick={handleClickCart}
             bg="none"
             _hover={{ bg: 'none' }}
             icon={<HiOutlineShoppingCart color="lightTextColor" />}
           />
+          <Link as={NavLink} to="/login">
+            Log in
+          </Link>
         </Flex>
         <Box gridColumn="2/3" justifySelf="center" mt={1}>
           <Flex>

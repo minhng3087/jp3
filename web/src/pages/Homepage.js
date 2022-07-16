@@ -1,5 +1,11 @@
+import { Box } from '@chakra-ui/react';
 import React from 'react';
+import Products from '../components/Products';
 
 export default function Homepage() {
-  return <div>Homepage</div>;
+  return (
+    <Box>
+      <Products />
+    </Box>
+  );
 }

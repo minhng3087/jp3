@@ -8,12 +8,19 @@ const queryClient = new QueryClient();
 
 export default function App() {
   const theme = extendTheme({
+    styles: {
+      global: {
+        body: {
+          color: 'rgb(14, 27, 77)'
+        }
+      }
+    },
     colors: {
       primaryColor: 'rgb(14, 27, 77)',
       lightTextColor: 'rgb(239, 240, 245, 0.75)'
     },
     fonts: {
-      body: "'Open Sans', sans-serif",
+      body: "'Open Sans', sans-serif"
     }
   });
 
