@@ -5,57 +5,72 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use DB;
 
 class OrderController extends Controller
-{  
+{
     public function getAllOrders() {
         $orders = Order::with('user')->get();
         return $orders;
     }
 
+    public function userGetAllOrders() {
+        $orders = Order::where('user_id', auth()->id())->simplePaginate(10);
+        return response()->json($orders);
+    }
+
     public function getOrderDetail($id) {
         $order_detail = Order::with([
-            'order_details', 'user', 
-            'order_details.product:id,name,image' 
+            'order_details', 'user',
+            'order_details.product:id,name,image'
         ])
         ->find($id);
         return $order_detail;
     }
 
-    public function postOrder(Request $request) {
-        $validator = Validator::make($request->all(), [
+    public function createOrder(Request $request) {
+        $dataToValidate = [
+            'address' => $request['address'],
+            'phone' => $request['phoneNumber']
+        ];
+        $validator = Validator::make($dataToValidate, [
             'address' => 'required|string',
             'phone' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error'=>"Error"], 401);      
+            return response()->json([
+                'success' => false,
+                'message' => 'Data is not valid'
+            ]);
         }
 
         DB::beginTransaction();
         try {
             $order = new Order();
-            $order->user_id = $request->user_id;
-            $order->address = $request->address;
-            $order->phone = $request->phone;
-            $order->total_price = $request->total_price;
+            $order->user_id = auth()->id();
+            $order->address = $request['address'];
+            $order->phone = $request['phoneNumber'];
+            $order->total_price = $request['totalPrice'];
             $order->save();
 
-            foreach ($request->productsList as $product) {
+            foreach ($request['products'] as $product) {
                 $orderDetail = new OrderDetail;
                 $orderDetail->order_id = $order->id;
                 $orderDetail->product_id = $product['id'];
-                $orderDetail->quantily = $product['quantily'];
+                $orderDetail->quantity = $product['quantity'];
                 $orderDetail->price = $product['price'];
                 $orderDetail->save();
             }
             DB::commit();
-            return response()->json('Mua hang thanh cong');
-        }catch (Exception $e) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully created order'
+            ]);
+        } catch (\Exception $e) {
             DB::rollBack();
-            throw new Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
 
     }

@@ -69,9 +69,7 @@ export default function CartDrawer({ isOpen, onClose, cart }) {
             >
               Subtotal
             </Text>
-            <Text textTransform="uppercase" color="gray.500">
-              ${getTotalAmount()}
-            </Text>
+            <Text color="gray.500">${getTotalAmount()}</Text>
           </Flex>
           <DrawerFooter px={4}>
             <Button
@@ -79,6 +77,10 @@ export default function CartDrawer({ isOpen, onClose, cart }) {
               color="white"
               bg="primaryColor"
               _hover={{ bg: 'primaryColor' }}
+              onClick={() => {
+                onClose();
+                history('/checkout');
+              }}
             >
               Checkout
             </Button>

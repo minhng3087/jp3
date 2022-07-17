@@ -13,7 +13,8 @@ export default function App() {
     styles: {
       global: {
         body: {
-          color: 'rgb(14, 27, 77)'
+          color: 'rgb(14, 27, 77)',
+					bg: 'gray.50'
         }
       }
     },

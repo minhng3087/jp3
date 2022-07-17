@@ -26,7 +26,7 @@ class OrderDetailFactory extends Factory
         return [
             'order_id' => \App\Models\Order::all()->random()->id,
             'product_id' => \App\Models\Product::all()->random()->id,
-            'quantily' => 2,
+            'quantity' => 2,
             'price' => '10000'
         ];
     }

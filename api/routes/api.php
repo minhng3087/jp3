@@ -33,6 +33,10 @@ Route::prefix('user')->group(function () {
     Route::middleware('auth:api')->group(function () {
         Route::get('me', [UserAuthController::class, 'me']);
         Route::get('logout', [UserAuthController::class, 'logout']);
+        Route::post('/createOrder', [OrderController::class, 'createOrder']);
+        Route::get('/orders', [OrderController::class, 'userGetAllOrders']);
+        Route::get('/orders/{id}', [OrderController::class, 'getOrderDetail']);
+
     });
 });
 
@@ -41,9 +45,6 @@ Route::post('/register', [UserController::class, 'register']);
 
 Route::get('/products', [ProductController::class, 'getAllProducts']);
 Route::get('/products/{id}', [ProductController::class, 'getSingleProduct']);
-Route::get('/orders', [OrderController::class, 'getAllOrders']);
-Route::get('/orders/{id}', [OrderController::class, 'getOrderDetail']);
-Route::post('/postOrder', [OrderController::class, 'postOrder']);
 
 Route::prefix('admin')->group(function () {
     Route::post('login', [AdminAuthController::class, 'login']);

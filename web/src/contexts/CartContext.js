@@ -119,6 +119,7 @@ function CartProvider({ children }) {
   return (
     <CartContext.Provider
       value={{
+				cart,
         isCartOpen,
         toggleCartOpen,
         addToCart,

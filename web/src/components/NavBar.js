@@ -25,7 +25,7 @@ export default function NavBar() {
   const history = useNavigate();
   const { authenticated, setCurrentUser, redirectWhenNoAuth } =
     useUserAuthContext();
-  const { toggleCartOpen, resetCart } = useCartContext();
+  const { toggleCartOpen, resetCart, cart } = useCartContext();
 
   const handleClickCart = useCallback(() => {
     if (!authenticated) {
@@ -46,6 +46,8 @@ export default function NavBar() {
     });
   }, [history, resetCart, setCurrentUser]);
 
+  console.log(cart.total);
+
   return (
     <Box bg="primaryColor" color="lightTextColor">
       <Box
@@ -58,8 +60,8 @@ export default function NavBar() {
       >
         <Flex>
           <IconButton
-            // variant="unstyled"
             bg="none"
+            size="lg"
             _hover={{ bg: 'none' }}
             icon={<HiOutlineSearch color="lightTextColor" />}
           />
@@ -68,17 +70,40 @@ export default function NavBar() {
           Shopping Cart
         </Text>
         <Flex justifySelf="right" alignItems="center" gap={3}>
-          <IconButton
-            onClick={handleClickCart}
-            bg="none"
-            _hover={{ bg: 'none' }}
-            icon={<HiOutlineShoppingCart color="lightTextColor" />}
-          />
+          <Box position="relative">
+            <IconButton
+              onClick={handleClickCart}
+              bg="none"
+              size="lg"
+              _hover={{ bg: 'none' }}
+              icon={<HiOutlineShoppingCart color="lightTextColor" />}
+            />
+            {cart.total > 0 ? (
+              <Text
+                position="absolute"
+                bottom="8px"
+                right="8px"
+                borderRadius="full"
+                bg="white"
+                color="primaryColor"
+                w="13px"
+                h="13px"
+                textAlign="center"
+                fontSize="8px"
+                lineHeight="13px"
+                fontWeight="500"
+              >
+                {cart.total}
+              </Text>
+            ) : null}
+          </Box>
           {authenticated ? (
             <Menu>
-              <MenuButton as={Avatar} size="xs" cursor="pointer" />
+              <MenuButton as={Avatar} size="sm" cursor="pointer" />
               <MenuList color="primaryColor">
-                <MenuItem>My orders</MenuItem>
+                <MenuItem onClick={() => history('/orders')}>
+                  My orders
+                </MenuItem>
                 <MenuItem onClick={handleLogOut}>Log out</MenuItem>
               </MenuList>
             </Menu>
