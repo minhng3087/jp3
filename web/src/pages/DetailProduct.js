@@ -57,8 +57,6 @@ export default function DetailProduct() {
     toggleCartOpen
   ]);
 
-  console.log(product);
-
   if (isLoading) {
     return (
       <Flex

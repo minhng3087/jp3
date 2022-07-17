@@ -2,12 +2,17 @@ import React, { useCallback, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import PropTypes from 'prop-types';
 import CartDrawer from '../components/CartDrawer';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const CartContext = React.createContext();
 
 function CartProvider({ children }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cart, setCart] = useState({ total: 0, products: [] });
+  // const [cart, setCart] = useState({ total: 0, products: [] });
+  const [cart, setCart] = useLocalStorage('shopping_cart', {
+    total: 0,
+    products: []
+  });
 
   const toggleCartOpen = useCallback(() => {
     setIsCartOpen((prev) => !prev);
@@ -41,7 +46,7 @@ function CartProvider({ children }) {
         })
       }));
     },
-    [cart.products]
+    [cart.products, setCart]
   );
 
   const getTotalAmount = useCallback(() => {
@@ -64,7 +69,7 @@ function CartProvider({ children }) {
         products: prev.products.filter((product) => product.id !== id)
       }));
     },
-    [cart.products]
+    [cart.products, setCart]
   );
 
   const handleChangeQuantity = useCallback(
@@ -104,12 +109,12 @@ function CartProvider({ children }) {
         }));
       }
     },
-    [cart.products]
+    [cart.products, setCart]
   );
 
   const resetCart = useCallback(() => {
     setCart((prev) => ({ ...prev, total: 0, products: [] }));
-  }, []);
+  }, [setCart]);
 
   return (
     <CartContext.Provider
