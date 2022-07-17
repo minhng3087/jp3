@@ -107,6 +107,10 @@ function CartProvider({ children }) {
     [cart.products]
   );
 
+  const resetCart = useCallback(() => {
+    setCart((prev) => ({ ...prev, total: 0, products: [] }));
+  }, []);
+
   return (
     <CartContext.Provider
       value={{
@@ -115,7 +119,8 @@ function CartProvider({ children }) {
         addToCart,
         getTotalAmount,
         removeItemFromCart,
-        handleChangeQuantity
+        handleChangeQuantity,
+        resetCart
       }}
     >
       <>

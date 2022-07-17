@@ -14,9 +14,11 @@ import ProductAPI from '../api/ProductAPI';
 import { useParams } from 'react-router-dom';
 import NotFound from '../components/NotFound';
 import { useCartContext } from '../contexts/CartContext';
+import { useUserAuthContext } from '../contexts/UserAuthContext';
 
 export default function DetailProduct() {
   const { id: productId } = useParams();
+  const { authenticated, redirectWhenNoAuth } = useUserAuthContext();
   const { addToCart, toggleCartOpen } = useCartContext();
 
   const [quantity, setQuantity] = useState(1);
@@ -40,9 +42,20 @@ export default function DetailProduct() {
   }, []);
 
   const handleAddToCart = useCallback(() => {
+    if (!authenticated) {
+      redirectWhenNoAuth();
+      return;
+    }
     addToCart(product, quantity);
     toggleCartOpen();
-  }, [addToCart, product, quantity, toggleCartOpen]);
+  }, [
+    addToCart,
+    authenticated,
+    product,
+    quantity,
+    redirectWhenNoAuth,
+    toggleCartOpen
+  ]);
 
   console.log(product);
 

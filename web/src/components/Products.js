@@ -12,9 +12,11 @@ import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import ProductAPI from '../api/ProductAPI';
 import { useCartContext } from '../contexts/CartContext';
+import { useUserAuthContext } from '../contexts/UserAuthContext';
 
 export default function Products() {
   const history = useNavigate();
+  const { authenticated, redirectWhenNoAuth } = useUserAuthContext();
   const { addToCart, toggleCartOpen } = useCartContext();
 
   const { isLoading, data: products } = useQuery('products', () =>
@@ -28,6 +30,18 @@ export default function Products() {
       }
     },
     [history]
+  );
+
+  const handleClickAddToCart = useCallback(
+    (product) => {
+      if (!authenticated) {
+        redirectWhenNoAuth();
+        return;
+      }
+      addToCart(product);
+      toggleCartOpen();
+    },
+    [addToCart, authenticated, redirectWhenNoAuth, toggleCartOpen]
   );
 
   return isLoading ? (
@@ -122,10 +136,9 @@ export default function Products() {
                           <Text>${price}</Text>
                         </Flex>
                         <Button
-                          onClick={() => {
-                            addToCart(product);
-                            toggleCartOpen();
-                          }}
+                          onClick={() =>
+                            handleClickAddToCart(product)
+                          }
                         >
                           Add to cart
                         </Button>

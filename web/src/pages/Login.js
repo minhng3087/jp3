@@ -3,9 +3,7 @@ import React, { useCallback, useRef } from 'react';
 import {
   Box,
   Button,
-  Checkbox,
   Container,
-  Divider,
   FormControl,
   FormLabel,
   HStack,
@@ -23,8 +21,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { useForm } from 'react-hook-form';
+import UserAuthAPI from '../api/UserAuthAPI';
+import { setUserToken } from '../utils/userAuth';
+import { useUserAuthContext } from '../contexts/UserAuthContext';
 
 export default function Login() {
+  const { setCurrentUser } = useUserAuthContext();
   const history = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
   const inputRef = useRef(null);
@@ -37,33 +39,34 @@ export default function Login() {
       inputRef.current.focus({ preventScroll: true });
     }
   };
-  // const wait = (ms) =>
-  // new Promise((resolve) => setTimeout(resolve, ms));
-  const onSubmit = useCallback((data) => {
-    // AuthAPI.login(data).then((response) => {
-    //   console.log(response);
-    //   if (response.success) {
-    //     setToken(response.token.access_token);
-    //     setCurrentUser(response.user);
-    //     toast({
-    //       title: 'Đăng nhập thành công!',
-    //       position: 'top',
-    //       duration: 3000,
-    //       status: 'success'
-    //     });
-    //     history(getIntendedUrl());
-    //   } else {
-    //     reset();
-    //     toast({
-    //       title: 'Đăng nhập thất bại!',
-    //       position: 'top',
-    //       description: response.message,
-    //       duration: 5000,
-    //       status: 'error'
-    //     });
-    //   }
-    // });
-  }, []);
+
+  const onSubmit = useCallback(
+    (data) => {
+      UserAuthAPI.login(data).then((response) => {
+        if (response.success) {
+          setUserToken(response.token.user_access_token);
+          setCurrentUser(response.user);
+          toast({
+            title: 'Logged in successfully!',
+            position: 'top',
+            duration: 3000,
+            status: 'success'
+          });
+          history('/');
+        } else {
+          reset();
+          toast({
+            title: 'Log in failed',
+            position: 'top',
+            description: response.message,
+            duration: 5000,
+            status: 'error'
+          });
+        }
+      });
+    },
+    [history, reset, setCurrentUser, toast]
+  );
 
   return (
     <Container

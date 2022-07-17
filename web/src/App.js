@@ -4,6 +4,7 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import AppFrame from './layouts/AppFrame';
 import CartProvider from './contexts/CartContext';
+import UserAuthProvider from './contexts/UserAuthContext';
 
 const queryClient = new QueryClient();
 
@@ -29,9 +30,11 @@ export default function App() {
     <ChakraProvider theme={theme}>
       <Router>
         <QueryClientProvider client={queryClient}>
-          <CartProvider>
-            <AppFrame />
-          </CartProvider>
+          <UserAuthProvider>
+            <CartProvider>
+              <AppFrame />
+            </CartProvider>
+          </UserAuthProvider>
         </QueryClientProvider>
       </Router>
     </ChakraProvider>
