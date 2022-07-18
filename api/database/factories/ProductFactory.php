@@ -19,7 +19,17 @@ class ProductFactory extends Factory
             'name' => $this->faker->word,
             'price' => $this->faker->numberBetween(50, 1000),
             'description' => $this->faker->text(180),
-            'image' => 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80'
+            'image' => $this->faker->randomElement([
+                'https://ih1.redbubble.net/image.457036478.8309/ssrco,classic_tee,flatlay,fafafa:ca443f4786,front,wide_portrait,750x1000.u2.jpg',
+                'https://ih1.redbubble.net/image.580459571.7282/ssrco,classic_tee,flatlay,fafafa:ca443f4786,front,wide_portrait,750x1000.u2.jpg',
+                'https://ih1.redbubble.net/image.458909738.1995/ssrco,classic_tee,flatlay,322e3f:696a94a5d4,front,wide_portrait,750x1000.u2.jpg',
+                'https://ih1.redbubble.net/image.512419742.3962/ssrco,classic_tee,flatlay,fafafa:ca443f4786,front,wide_portrait,750x1000.u2.jpg',
+                'https://ih1.redbubble.net/image.975548906.9197/ssrco,classic_tee,flatlay,fafafa:ca443f4786,front,wide_portrait,750x1000.jpg',
+                'https://ih1.redbubble.net/image.2048692408.4905/ssrco,classic_tee,flatlay,353d77:4d8b4ffd91,front,wide_portrait,750x1000.jpg',
+                'https://ih1.redbubble.net/image.780875299.4089/ssrco,classic_tee,flatlay,101010:01c5ca27c6,front,wide_portrait,750x1000.u4.jpg',
+                'https://ih1.redbubble.net/image.2778473237.1160/ssrco,classic_tee,flatlay,heather_grey,front,wide_portrait,750x1000.u1.jpg',
+                'https://ih1.redbubble.net/image.1280570379.5573/ssrco,classic_tee,flatlay,541e68:68f9e309b0,front,wide_portrait,750x1000.jpg'
+                ])
         ];
     }
 }
