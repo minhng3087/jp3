@@ -30,6 +30,8 @@ Route::get('token', function (Request $request) {
 
 Route::prefix('user')->group(function () {
     Route::post('login', [UserAuthController::class, 'login']);
+    Route::post('register', [UserAuthController::class, 'register']);
+
     Route::middleware('auth:api')->group(function () {
         Route::get('me', [UserAuthController::class, 'me']);
         Route::get('logout', [UserAuthController::class, 'logout']);
@@ -41,7 +43,6 @@ Route::prefix('user')->group(function () {
 });
 
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/register', [UserController::class, 'register']);
 
 Route::get('/products', [ProductController::class, 'getAllProducts']);
 Route::get('/products/{id}', [ProductController::class, 'getSingleProduct']);

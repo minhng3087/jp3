@@ -1,12 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   Box,
   Button,
   Container,
   FormControl,
   FormLabel,
-  Heading,
   HStack,
   IconButton,
   Input,
@@ -22,35 +21,58 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { useForm } from 'react-hook-form';
+import UserAuthAPI from '../api/UserAuthAPI';
 
 export default function Signup() {
   const history = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
   const inputRef = useRef(null);
-  const { register, handleSubmit, reset } = useForm();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm();
   const toast = useToast();
 
-  const onSubmit = useCallback((data) => {
-    // AuthAPI.register(data).then((response) => {
-    //   if (!response.error) {
-    //     toast({
-    //       title: 'Đăng ký thành công',
-    //       description: 'Vui lòng đăng nhập vào hệ thống',
-    //       duration: 3000,
-    //       status: 'success'
-    //     });
-    //     history('/login');
-    //   } else {
-    //     reset();
-    //     toast({
-    //       title: 'Email đã tồn tại',
-    //       description: 'Vui lòng thử lại',
-    //       duration: 3000,
-    //       status: 'error'
-    //     });
-    //   }
-    // });
-  }, []);
+  const onSubmit = useCallback(
+    (data) => {
+      setIsSubmitting(true);
+      UserAuthAPI.register(data)
+        .then((response) => {
+          setIsSubmitting(false);
+          if (response.success) {
+            toast({
+              title: response.message,
+              description: 'Please log in to use',
+              duration: 3000,
+              status: 'success'
+            });
+            history('/login');
+          } else {
+            reset();
+            toast({
+              title: response.message,
+              description: 'Please try again',
+              duration: 3000,
+              status: 'error'
+            });
+          }
+        })
+        .catch(() => {
+          setIsSubmitting(false);
+          toast({
+            title: 'An unknown error occurred',
+            duration: 3000,
+            status: 'error'
+          });
+        });
+    },
+    [history, reset, toast]
+  );
 
   const onClickReveal = () => {
     onToggle();
@@ -83,63 +105,90 @@ export default function Signup() {
             sm: useColorModeValue('md', 'md-dark')
           }}
           borderRadius={{ base: 'none', sm: 'xl' }}
+          as="form"
+          onSubmit={handleSubmit(onSubmit)}
         >
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Stack spacing="6">
-              <Stack spacing="5">
-                <FormControl isRequired>
-                  <FormLabel htmlFor="fullName">Full name</FormLabel>
-                  <Input {...register('fullName')} />
-                </FormControl>
+          <Stack spacing="6">
+            <Stack spacing="5">
+              <FormControl>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  {...register('name', {
+                    required: 'Name is a required field'
+                  })}
+                />
+                {errors.name ? (
+                  <Text color="red" mt={1}>
+                    {errors.name.message}
+                  </Text>
+                ) : null}
+              </FormControl>
 
-                <FormControl isRequired>
-                  <FormLabel htmlFor="email">Email</FormLabel>
-                  <Input type="email" {...register('email')} />
-                </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="email">Email</FormLabel>
+                <Input
+                  type="email"
+                  {...register('email', {
+                    required: 'Email is a required field'
+                  })}
+                />
+                {errors.email ? (
+                  <Text color="red" mt={1}>
+                    {errors.email.message}
+                  </Text>
+                ) : null}
+              </FormControl>
 
-                <FormControl isRequired>
-                  <FormLabel htmlFor="password">Password</FormLabel>
-                  <InputGroup>
-                    <Input
-                      ref={inputRef}
-                      type={isOpen ? 'text' : 'password'}
-                      autoComplete="current-password"
-                      {...register('password')}
+              <FormControl>
+                <FormLabel htmlFor="password">Password</FormLabel>
+                <InputGroup>
+                  <Input
+                    ref={inputRef}
+                    type={isOpen ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    {...register('password', {
+                      required: 'Password is a required field'
+                    })}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      variant="link"
+                      icon={isOpen ? <HiEyeOff /> : <HiEye />}
+                      onClick={onClickReveal}
                     />
-                    <InputRightElement>
-                      <IconButton
-                        variant="link"
-                        icon={isOpen ? <HiEyeOff /> : <HiEye />}
-                        onClick={onClickReveal}
-                      />
-                    </InputRightElement>
-                  </InputGroup>
-                </FormControl>
-              </Stack>
-
-              <Stack spacing="6">
-                <Button
-                  type="submit"
-                  colorScheme="blue"
-                  bg="primaryColor"
-                  _hover={{ bg: 'primaryColor' }}
-                >
-                  Sign up
-                </Button>
-                <HStack justify="center">
-                  <Text color="muted">Already have an account?</Text>
-                  <Button
-                    variant="link"
-                    colorScheme="blue"
-                    onClick={() => history('/login')}
-                    color="primaryColor"
-                  >
-                    Log in
-                  </Button>
-                </HStack>
-              </Stack>
+                  </InputRightElement>
+                </InputGroup>
+                {errors.password ? (
+                  <Text color="red" mt={1}>
+                    {errors.password.message}
+                  </Text>
+                ) : null}
+              </FormControl>
             </Stack>
-          </form>
+
+            <Stack spacing="6">
+              <Button
+                type="submit"
+                colorScheme="blue"
+                bg="primaryColor"
+                _hover={{ bg: 'primaryColor' }}
+                isLoading={isSubmitting}
+              >
+                Sign up
+              </Button>
+              <HStack justify="center">
+                <Text color="muted">Already have an account?</Text>
+                <Button
+                  variant="link"
+                  colorScheme="blue"
+                  onClick={() => history('/login')}
+                  color="primaryColor"
+                >
+                  Log in
+                </Button>
+              </HStack>
+            </Stack>
+          </Stack>
         </Box>
       </Stack>
     </Container>

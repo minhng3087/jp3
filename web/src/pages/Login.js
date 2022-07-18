@@ -31,7 +31,12 @@ export default function Login() {
   const { isOpen, onToggle } = useDisclosure();
   const inputRef = useRef(null);
   const toast = useToast();
-  const { register, handleSubmit, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm();
 
   const onClickReveal = () => {
     onToggle();
@@ -117,7 +122,17 @@ export default function Login() {
               <Stack spacing="5">
                 <FormControl>
                   <FormLabel htmlFor="email">Email</FormLabel>
-                  <Input type="email" {...register('email')} />
+                  <Input
+                    type="email"
+                    {...register('email', {
+                      required: 'Email is a required field'
+                    })}
+                  />
+                  {errors.email ? (
+                    <Text color="red" mt={1}>
+                      {errors.email.message}
+                    </Text>
+                  ) : null}
                 </FormControl>
                 <FormControl>
                   <FormLabel htmlFor="password">Password</FormLabel>
@@ -126,7 +141,9 @@ export default function Login() {
                       ref={inputRef}
                       type={isOpen ? 'text' : 'password'}
                       autoComplete="current-password"
-                      {...register('password')}
+                      {...register('password', {
+                        required: 'Password is a required field'
+                      })}
                     />
                     <InputRightElement>
                       <IconButton
@@ -136,6 +153,11 @@ export default function Login() {
                       />
                     </InputRightElement>
                   </InputGroup>
+                  {errors.password ? (
+                    <Text color="red" mt={1}>
+                      {errors.password.message}
+                    </Text>
+                  ) : null}
                 </FormControl>
               </Stack>
               {/* <HStack justify="space-between">

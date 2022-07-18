@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class UserAuthController extends Controller
@@ -30,20 +32,34 @@ class UserAuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register()
+    public function register(Request $request)
     {
-        $newUser = [
-            'display_name' => request('fullName'),
-            'email' => request('email'),
-            'password' => Hash::make(request('password'))
-        ];
+        $data = $request->all();
+        $validator = Validator::make($data, [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data is not valid'
+            ]);
+        }
+
+        $data['password'] = Hash::make($request['password']);
 
         try {
-            // $user = User::create($newUser);
-            DB::table('users')->insert($newUser);
-            return response()->json(['success' => 'Registered successfully']);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Registration error']);
+            $user = User::create($data);
+            return response()->json([
+                'success' => true,
+                'message' => 'Registered successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Registration error'
+            ]);
         }
     }
 
