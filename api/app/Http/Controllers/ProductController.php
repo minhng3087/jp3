@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
-{  
+{
     public function getAllProducts() {
-        $products = Product::all();
-        return $products;
+        $products = Product::simplePaginate(12);
+        return response()->json($products);
     }
 
     public function getSingleProduct($id) {
-        $products = Product::findOrFail($id);
-        return $products;
+        $product = Product::findOrFail($id);
+        return response()->json($product);
     }
 }

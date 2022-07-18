@@ -8,26 +8,6 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::get('token', function (Request $request) {
-    $token = $request->session()->token();
-    $token = csrf_token();
-    return response()->json(array("token" => $token));
-});
-
 Route::prefix('user')->group(function () {
     Route::post('login', [UserAuthController::class, 'login']);
     Route::post('register', [UserAuthController::class, 'register']);
@@ -41,8 +21,6 @@ Route::prefix('user')->group(function () {
 
     });
 });
-
-Route::post('/login', [UserController::class, 'login']);
 
 Route::get('/products', [ProductController::class, 'getAllProducts']);
 Route::get('/products/{id}', [ProductController::class, 'getSingleProduct']);

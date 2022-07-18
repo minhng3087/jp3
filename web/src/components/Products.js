@@ -7,7 +7,8 @@ import {
   Spinner,
   Text
 } from '@chakra-ui/react';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import ProductAPI from '../api/ProductAPI';
@@ -19,8 +20,11 @@ export default function Products() {
   const { authenticated, redirectWhenNoAuth } = useUserAuthContext();
   const { addToCart, toggleCartOpen } = useCartContext();
 
-  const { isLoading, data: products } = useQuery('products', () =>
-    ProductAPI.getAllProducts()
+  const [page, setPage] = useState(1);
+
+  const { isLoading, data: products } = useQuery(
+    ['products', page],
+    () => ProductAPI.getAllProducts(page)
   );
 
   const handleClickProduct = useCallback(
@@ -68,7 +72,7 @@ export default function Products() {
       <Box mt="30px">
         <Box maxW="70rem" m="0 auto" p="0 5rem">
           <Flex flexWrap="wrap" columnGap="28px" rowGap="28px">
-            {products.map((product, i) => {
+            {products.data.map((product, i) => {
               const { id, name, price, image } = product;
               return (
                 <Box
@@ -149,6 +153,28 @@ export default function Products() {
               );
             })}
           </Flex>
+          {!isLoading && products?.data?.length === 0 ? (
+            <Box textAlign="center" p="20px	100px" color="gray.800">
+              No products yet
+            </Box>
+          ) : (
+            <Flex justifyContent="space-between" py={4}>
+              <Button
+                leftIcon={<HiChevronLeft />}
+                onClick={() => setPage((old) => Math.max(old - 1, 0))}
+                isDisabled={!products?.prev_page_url}
+              >
+                Previous
+              </Button>
+              <Button
+                rightIcon={<HiChevronRight />}
+                onClick={() => setPage((old) => old + 1)}
+                isDisabled={!products?.next_page_url}
+              >
+                Next
+              </Button>
+            </Flex>
+          )}
         </Box>
       </Box>
     </Box>
