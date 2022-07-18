@@ -1,9 +1,12 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   Avatar,
   Box,
   Flex,
   IconButton,
+  Input,
+  InputGroup,
+  InputRightElement,
   Link,
   Menu,
   MenuButton,
@@ -13,19 +16,36 @@ import {
 } from '@chakra-ui/react';
 import {
   HiOutlineSearch,
-  HiOutlineShoppingCart
+  HiOutlineShoppingCart,
+  HiX
 } from 'react-icons/hi';
 import { Link as NavLink, useNavigate } from 'react-router-dom';
 import { useCartContext } from '../contexts/CartContext';
 import { useUserAuthContext } from '../contexts/UserAuthContext';
 import UserAuthAPI from '../api/UserAuthAPI';
 import { setUserToken } from '../utils/userAuth';
+import { useWebContext } from '../contexts/WebContext';
 
 export default function NavBar() {
   const history = useNavigate();
   const { authenticated, setCurrentUser, redirectWhenNoAuth } =
     useUserAuthContext();
   const { toggleCartOpen, resetCart, cart } = useCartContext();
+  const { searchString, setSearchString } = useWebContext();
+
+  const searchInputRef = useRef(null);
+
+  const handleChangeSearchString = useCallback(
+    (e) => {
+      setSearchString(e.target.value);
+    },
+    [setSearchString]
+  );
+
+  const handleClearSearchString = useCallback(() => {
+    setSearchString('');
+    searchInputRef.current.value = '';
+  }, [setSearchString]);
 
   const handleClickCart = useCallback(() => {
     if (!authenticated) {
@@ -57,12 +77,26 @@ export default function NavBar() {
         m="0 auto"
       >
         <Flex>
-          <IconButton
-            bg="none"
-            size="lg"
-            _hover={{ bg: 'none' }}
-            icon={<HiOutlineSearch color="lightTextColor" />}
-          />
+          <InputGroup>
+            <Input
+              ref={searchInputRef}
+              placeholder="Search"
+              onChange={handleChangeSearchString}
+            />
+            <InputRightElement>
+              {searchString ? (
+                <IconButton
+                  icon={<HiX />}
+                  bg="none"
+                  _hover={{ bg: 'none' }}
+                  _active={{ bg: 'none' }}
+                  onClick={handleClearSearchString}
+                />
+              ) : (
+                <HiOutlineSearch color="lightTextColor" />
+              )}
+            </InputRightElement>
+          </InputGroup>
         </Flex>
         <Text justifySelf="center" fontWeight="bold" fontSize="xl">
           Shopping Cart

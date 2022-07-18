@@ -16,10 +16,7 @@ export default function DetailOrder() {
   const { id } = useParams();
   const { isLoading, data } = useQuery('userGetDetailOrder', () =>
     OrderAPI.userGetDetailOrder(id)
-    );
-    
-    console.log(data)
-  console.log(data);
+  );
 
   if (isLoading) {
     return (

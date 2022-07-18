@@ -26,8 +26,6 @@ export default function MyOrders() {
     () => OrderAPI.userGetAllOrders(page)
   );
 
-  console.log(data);
-
   return (
     <Box p="60px 0">
       <Box maxW="70rem" m="0 auto" p="0 5rem">

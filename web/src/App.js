@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import AppFrame from './layouts/AppFrame';
 import CartProvider from './contexts/CartContext';
 import UserAuthProvider from './contexts/UserAuthContext';
+import WebProvider from './contexts/WebContext';
 
 const queryClient = new QueryClient();
 
@@ -14,7 +15,7 @@ export default function App() {
       global: {
         body: {
           color: 'rgb(14, 27, 77)',
-					bg: 'gray.50'
+          bg: 'gray.50'
         }
       }
     },
@@ -32,9 +33,11 @@ export default function App() {
       <Router>
         <QueryClientProvider client={queryClient}>
           <UserAuthProvider>
-            <CartProvider>
-              <AppFrame />
-            </CartProvider>
+            <WebProvider>
+              <CartProvider>
+                <AppFrame />
+              </CartProvider>
+            </WebProvider>
           </UserAuthProvider>
         </QueryClientProvider>
       </Router>

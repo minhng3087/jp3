@@ -14,18 +14,25 @@ import { useNavigate } from 'react-router-dom';
 import ProductAPI from '../api/ProductAPI';
 import { useCartContext } from '../contexts/CartContext';
 import { useUserAuthContext } from '../contexts/UserAuthContext';
+import { useWebContext } from '../contexts/WebContext';
 
 export default function Products() {
   const history = useNavigate();
   const { authenticated, redirectWhenNoAuth } = useUserAuthContext();
   const { addToCart, toggleCartOpen } = useCartContext();
+  const { searchString } = useWebContext();
 
   const [page, setPage] = useState(1);
+  const [sortType, setSortType] = useState('none');
 
   const { isLoading, data: products } = useQuery(
-    ['products', page],
-    () => ProductAPI.getAllProducts(page)
+    ['products', sortType, searchString, page],
+    () => ProductAPI.getAllProducts(sortType, searchString, page)
   );
+
+  const handleChangeSortType = useCallback((e) => {
+    setSortType(e.target.value);
+  }, []);
 
   const handleClickProduct = useCallback(
     (e, id) => {
@@ -61,10 +68,15 @@ export default function Products() {
     <Box p="60px 0">
       <Box maxW="70rem" m="0 auto" p="0 5rem">
         <Flex alignItems="center" gap={4}>
-          <Text>Filter by</Text>
+          <Text>Sort by</Text>
           <Flex>
-            <Select size="sm">
-              <option value="">Price</option>
+            <Select
+              size="sm"
+              placeholder="None"
+              onChange={handleChangeSortType}
+            >
+              <option value="low-to-high">Price, low to high</option>
+              <option value="high-to-low">Price, high to low</option>
             </Select>
           </Flex>
         </Flex>

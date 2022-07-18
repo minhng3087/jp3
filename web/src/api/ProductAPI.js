@@ -5,9 +5,9 @@ import {
 import instanceAxios from './base';
 
 class ProductAPI {
-  static async getAllProducts(page = 1) {
+  static async getAllProducts(sortType, searchString, page = 1) {
     const response = await instanceAxios.get(
-      `${GET_ALL_PRODUCTS_ENDPOINT}?page=${page}`
+      `${GET_ALL_PRODUCTS_ENDPOINT}?sortType=${sortType}&searchString=${searchString}&page=${page}`
     );
     return response.data;
   }

@@ -8,7 +8,6 @@ const CartContext = React.createContext();
 
 function CartProvider({ children }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  // const [cart, setCart] = useState({ total: 0, products: [] });
   const [cart, setCart] = useLocalStorage('shopping_cart', {
     total: 0,
     products: []
