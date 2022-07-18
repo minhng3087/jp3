@@ -16,8 +16,9 @@ export default function DetailOrder() {
   const { id } = useParams();
   const { isLoading, data } = useQuery('userGetDetailOrder', () =>
     OrderAPI.userGetDetailOrder(id)
-  );
-
+    );
+    
+    console.log(data)
   console.log(data);
 
   if (isLoading) {
@@ -74,7 +75,7 @@ export default function DetailOrder() {
                           fontSize="sm"
                           wordBreak="break-word"
                         >
-                          x{orderDetail.quantity}
+                          {orderDetail.price} x {orderDetail.quantity}
                         </Text>
                       </Box>
                     </Flex>

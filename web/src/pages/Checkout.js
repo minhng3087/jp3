@@ -47,7 +47,7 @@ export default function Checkout() {
             duration: 3000,
             status: 'success'
           });
-          history('/my-orders');
+          history('/');
         })
         .catch(() => {
           setIsSubmitting(false);

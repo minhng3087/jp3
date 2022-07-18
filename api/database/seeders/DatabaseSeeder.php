@@ -19,14 +19,14 @@ class DatabaseSeeder extends Seeder
         // $this->call(ProductSeeder::class);
         // factory(Product::class, 50)->create();
         Product::factory(20)->create();
-        \App\Models\User::factory(5)
-            ->create()
-            ->each(function($u) {
-                $m = $u->orders()->save(Order::factory()->make());
-                $m->each(function($i) {
-                    $i->order_details()->save(OrderDetail::factory()->make());
-                });
-            });
-        // \App\Models\OrderDetail::factory(10)->create();
+        \App\Models\User::factory(5)->create();
+        //     ->create()
+        //     ->each(function($u) {
+        //         $m = $u->orders()->save(Order::factory()->make());
+        //         $m->each(function($i) {
+        //             $i->order_details()->save(OrderDetail::factory()->make());
+        //         });
+        //     });
+        // // \App\Models\OrderDetail::factory(10)->create();
     }
 }
