@@ -6,7 +6,6 @@ import {
   Container,
   FormControl,
   FormLabel,
-  HStack,
   IconButton,
   Input,
   InputGroup,
@@ -21,12 +20,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { useForm } from 'react-hook-form';
-import UserAuthAPI from '../api/UserAuthAPI';
-import { setUserToken } from '../utils/userAuth';
-import { useUserAuthContext } from '../contexts/UserAuthContext';
+import AdminAuthAPI from '../api/AdminAuthAPI';
+import { setAdminToken } from '../utils/adminAuth';
+import { useAdminAuthContext } from '../contexts/AdminAuthContext';
 
-export default function Login() {
-  const { setCurrentUser } = useUserAuthContext();
+export default function AdminLogin() {
+  const { setCurrentAdmin } = useAdminAuthContext();
   const history = useNavigate();
   const { isOpen, onToggle } = useDisclosure();
   const inputRef = useRef(null);
@@ -47,17 +46,17 @@ export default function Login() {
 
   const onSubmit = useCallback(
     (data) => {
-      UserAuthAPI.login(data).then((response) => {
+      AdminAuthAPI.login(data).then((response) => {
         if (response.success) {
-          setUserToken(response.token.user_access_token);
-          setCurrentUser(response.user);
+          setAdminToken(response.token.admin_access_token);
+          setCurrentAdmin(response.admin);
           toast({
             title: 'Logged in successfully!',
             position: 'top',
             duration: 3000,
             status: 'success'
           });
-          history('/');
+          history('/admin/orders');
         } else {
           reset();
           toast({
@@ -70,7 +69,7 @@ export default function Login() {
         }
       });
     },
-    [history, reset, setCurrentUser, toast]
+    [history, reset, setCurrentAdmin, toast]
   );
 
   return (
@@ -90,19 +89,8 @@ export default function Login() {
               lineHeight="1.2"
               color="primaryColor"
             >
-              Login to Shopping
+              Login to Shopping Cart Manager
             </Text>
-            <HStack justify="center">
-              <Text color="muted">Don't have an account?</Text>
-              <Button
-                variant="link"
-                colorScheme="blue"
-                color="primaryColor"
-                onClick={() => history('/signup')}
-              >
-                Sign up
-              </Button>
-            </HStack>
           </Stack>
         </Stack>
         <Box

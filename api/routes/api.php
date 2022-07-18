@@ -17,7 +17,7 @@ Route::prefix('user')->group(function () {
         Route::get('logout', [UserAuthController::class, 'logout']);
         Route::post('/createOrder', [OrderController::class, 'createOrder']);
         Route::get('/orders', [OrderController::class, 'userGetAllOrders']);
-        Route::get('/orders/{id}', [OrderController::class, 'getOrderDetail']);
+        Route::get('/orders/{id}', [OrderController::class, 'userGetOrderDetail']);
 
     });
 });
@@ -27,4 +27,11 @@ Route::get('/products/{id}', [ProductController::class, 'getSingleProduct']);
 
 Route::prefix('admin')->group(function () {
     Route::post('login', [AdminAuthController::class, 'login']);
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('me', [AdminAuthController::class, 'me']);
+        Route::get('logout', [AdminAuthController::class, 'logout']);
+        Route::get('/orders', [OrderController::class, 'adminGetAllOrders']);
+        Route::get('/orders/{id}', [OrderController::class, 'adminGetOrderDetail']);
+
+    });
 });

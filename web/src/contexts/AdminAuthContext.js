@@ -10,21 +10,21 @@ import React, {
 import PropTypes from 'prop-types';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
-import { getUserToken, removeUserToken } from '../utils/userAuth';
-import UserAuthAPI from '../api/UserAuthAPI';
+import { getAdminToken, removeAdminToken } from '../utils/adminAuth';
+import AdminAuthAPI from '../api/AdminAuthAPI';
 
-const UserAuthContext = createContext();
+const AdminAuthContext = createContext();
 
-function UserAuthProvider({ children }) {
+function AdminAuthProvider({ children }) {
   const [initializing, setInitializing] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
-  const authenticated = useMemo(() => !!currentUser, [currentUser]);
+  const [currentAdmin, setCurrentAdmin] = useState(null);
+  const authenticated = useMemo(() => !!currentAdmin, [currentAdmin]);
   const history = useNavigate();
   const toast = useToast();
 
   const initAuth = async () => {
-    return getUserToken()
-      ? UserAuthAPI.getUser()
+    return getAdminToken()
+      ? AdminAuthAPI.getAdmin()
       : Promise.resolve(null);
   };
 
@@ -40,7 +40,7 @@ function UserAuthProvider({ children }) {
   useEffect(() => {
     initAuth()
       .then((user) => {
-        setCurrentUser(user);
+        setCurrentAdmin(user);
         setInitializing(false);
       })
       .catch(() => {
@@ -50,39 +50,39 @@ function UserAuthProvider({ children }) {
           description: 'Please log in again',
           status: 'warning'
         });
-        removeUserToken();
+        removeAdminToken();
         return <Navigate to="/login" />;
       });
   }, [toast]);
 
   return (
-    <UserAuthContext.Provider
+    <AdminAuthContext.Provider
       value={{
         initializing,
         authenticated,
-        currentUser,
-        setCurrentUser,
+        currentAdmin,
+        setCurrentAdmin,
         redirectWhenNoAuth
       }}
     >
       {children}
-    </UserAuthContext.Provider>
+    </AdminAuthContext.Provider>
   );
 }
 
-const useUserAuthContext = () => {
-  const context = useContext(UserAuthContext);
+const useAdminAuthContext = () => {
+  const context = useContext(AdminAuthContext);
 
   if (context === undefined) {
-    throw new Error(`useUserAuth must be used within a UserAuthProvider`);
+    throw new Error(`useAdminAuth must be used within a AdminAuthProvider`);
   }
 
   return context;
 };
 
-UserAuthProvider.propTypes = {
+AdminAuthProvider.propTypes = {
   children: PropTypes.element.isRequired
 };
 
-export default UserAuthProvider;
-export { useUserAuthContext };
+export default AdminAuthProvider;
+export { useAdminAuthContext };

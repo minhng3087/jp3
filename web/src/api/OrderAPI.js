@@ -1,8 +1,11 @@
 import {
+	ADMIN_GET_ALL_ORDERS_ENDPOINT,
+  ADMIN_GET_DETAIL_ORDER_ENDPOINT,
   USER_CREATE_ORDER_ENDPOINT,
   USER_GET_ALL_ORDERS_ENDPOINT,
   USER_GET_DETAIL_ORDER_ENDPOINT
 } from '../constants/endpoints';
+import { getAdminToken } from '../utils/adminAuth';
 import { getUserToken } from '../utils/userAuth';
 import instanceAxios from './base';
 
@@ -38,6 +41,32 @@ class OrderAPI {
     const token = getUserToken();
     const response = await instanceAxios.get(
       `${USER_GET_DETAIL_ORDER_ENDPOINT}${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    return response.data;
+  }
+
+  static async adminGetAllOrders(page = 1) {
+    const token = getAdminToken();
+    const response = await instanceAxios.get(
+      `${ADMIN_GET_ALL_ORDERS_ENDPOINT}?page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    return response.data;
+  }
+
+  static async adminGetDetailOrder(id) {
+    const token = getUserToken();
+    const response = await instanceAxios.get(
+      `${ADMIN_GET_DETAIL_ORDER_ENDPOINT}${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`

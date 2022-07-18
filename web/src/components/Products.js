@@ -27,7 +27,8 @@ export default function Products() {
 
   const { isLoading, data: products } = useQuery(
     ['products', sortType, searchString, page],
-    () => ProductAPI.getAllProducts(sortType, searchString, page)
+    () => ProductAPI.getAllProducts(sortType, searchString, page),
+    { keepPreviousData: true }
   );
 
   const handleChangeSortType = useCallback((e) => {

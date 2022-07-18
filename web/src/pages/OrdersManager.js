@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
 import {
   Box,
   Button,
   Flex,
+  IconButton,
   Spinner,
   Table,
   TableContainer,
@@ -13,22 +13,59 @@ import {
   Thead,
   Tr
 } from '@chakra-ui/react';
+import React, { useCallback, useState } from 'react';
+import {
+  HiChevronLeft,
+  HiChevronRight,
+  HiOutlineEye
+} from 'react-icons/hi';
 import { useQuery } from 'react-query';
 import OrderAPI from '../api/OrderAPI';
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
-import { useNavigate } from 'react-router-dom';
+import DetailOrderModal from '../components/DetailOrderModal';
 
-export default function MyOrders() {
-  const history = useNavigate();
+export default function OrdersManager() {
   const [page, setPage] = useState(1);
+  const [isDetailOrderModalOpen, setIsDetailOrderModalOpen] =
+    useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
   const { isLoading, data } = useQuery(
-    ['userGetAllOrders', page],
-    () => OrderAPI.userGetAllOrders(page)
+    ['adminGetAllOrders', page],
+    () => OrderAPI.adminGetAllOrders(page),
+    { keepPreviousData: true }
   );
-	
+
+  const toggleDetailOrderModalOpen = useCallback(() => {
+    setIsDetailOrderModalOpen((prev) => !prev);
+  }, []);
+
+  const handleClickSeeDetail = useCallback(
+    (order) => {
+      toggleDetailOrderModalOpen();
+      setSelectedOrder(order);
+    },
+    [toggleDetailOrderModalOpen]
+  );
+
+  console.log(data);
+
   return (
-    <Box p="60px 0">
-      <Box maxW="70rem" m="0 auto" p="0 5rem">
+    <>
+      <DetailOrderModal
+        isOpen={isDetailOrderModalOpen}
+        onClose={toggleDetailOrderModalOpen}
+        selectedOrder={selectedOrder}
+      />
+      <Box
+        paddingTop={8}
+        paddingBottom={8}
+        paddingInlineStart={8}
+        paddingInlineEnd={8}
+        marginInline="auto"
+        marginTop="2rem"
+        maxW="6xl"
+        w="100%"
+      >
         <Flex background="white" boxShadow="sm" borderRadius="lg">
           <TableContainer whiteSpace="unset" w="full">
             <Flex
@@ -37,16 +74,20 @@ export default function MyOrders() {
               borderBottom="1px solid"
               borderColor="gray.100"
             >
-              <Text fontWeight={700} fontSize="2xl">
-                My orders
+              <Text fontWeight="600" fontSize="xl">
+                Orders
               </Text>
             </Flex>
             <Table variant="simple">
               <Thead>
                 <Tr>
                   <Th>ID</Th>
-                  <Th>Total price</Th>
-                  <Th>Action</Th>
+                  <Th>Orderer name</Th>
+                  <Th>Email</Th>
+                  <Th>Phone number</Th>
+                  <Th>Address</Th>
+                  <Th>Total amount</Th>
+                  <Th>Actions</Th>
                 </Tr>
               </Thead>
               {isLoading ? (
@@ -63,17 +104,18 @@ export default function MyOrders() {
                     data.data.map((order, i) => (
                       <Tr key={`user-${i + 1}`}>
                         <Td>{order.id}</Td>
+                        <Td>{order.user.name}</Td>
+                        <Td>{order.user.email}</Td>
+                        <Td>{order.phone}</Td>
+                        <Td>{order.address}</Td>
                         <Td>{order.total_price}</Td>
                         <Td>
-                          <Button
-                            variant="link"
+                          <IconButton
                             onClick={() =>
-                              history(`/orders/${order.id}`)
+                              handleClickSeeDetail(order)
                             }
-                            color="primaryColor"
-                          >
-                            See detail
-                          </Button>
+                            icon={<HiOutlineEye />}
+                          />
                         </Td>
                       </Tr>
                     ))}
@@ -93,20 +135,20 @@ export default function MyOrders() {
                   }
                   isDisabled={!data?.prev_page_url}
                 >
-                  Previous
+                  Trước
                 </Button>
                 <Button
                   rightIcon={<HiChevronRight />}
                   onClick={() => setPage((old) => old + 1)}
                   isDisabled={!data?.next_page_url}
                 >
-                  Next
+                  Sau
                 </Button>
               </Flex>
             )}
           </TableContainer>
         </Flex>
       </Box>
-    </Box>
+    </>
   );
 }

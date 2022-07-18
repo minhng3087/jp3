@@ -10,9 +10,17 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
-    public function getAllOrders() {
-        $orders = Order::with('user')->get();
-        return $orders;
+    public function adminGetAllOrders() {
+        $orders = Order::with(['user', 'order_details','order_details.product:id,name,image'])->simplePaginate(10);
+        return response()->json($orders);
+    }
+
+    public function adminGetOrderDetail($id) {
+        $order_detail = Order::with([
+            'order_details.product:id,name,image'
+        ])
+            ->find($id);
+        return response()->json($order_detail);
     }
 
     public function userGetAllOrders() {
@@ -20,14 +28,15 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
-    public function getOrderDetail($id) {
+    public function userGetOrderDetail($id) {
         $order_detail = Order::with([
-            'order_details', 'user',
             'order_details.product:id,name,image'
         ])
         ->find($id);
-        return $order_detail;
+        return response()->json($order_detail);
     }
+
+
 
     public function createOrder(Request $request) {
         $dataToValidate = [

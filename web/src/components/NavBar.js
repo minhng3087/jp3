@@ -16,7 +16,7 @@ import {
 } from '@chakra-ui/react';
 import {
   HiOutlineSearch,
-  HiOutlineShoppingCart,
+  HiOutlineShoppingBag,
   HiX
 } from 'react-icons/hi';
 import { Link as NavLink, useNavigate } from 'react-router-dom';
@@ -110,7 +110,7 @@ export default function NavBar() {
               bg="none"
               size="lg"
               _hover={{ bg: 'none' }}
-              icon={<HiOutlineShoppingCart color="lightTextColor" />}
+              icon={<HiOutlineShoppingBag color="lightTextColor" />}
             />
             {cart.total > 0 ? (
               <Text
