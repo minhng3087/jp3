@@ -128,14 +128,14 @@ export default function ProductsManager() {
                   }
                   isDisabled={!data?.prev_page_url}
                 >
-                  Trước
+                  Previous
                 </Button>
                 <Button
                   rightIcon={<HiChevronRight />}
                   onClick={() => setPage((old) => old + 1)}
                   isDisabled={!data?.next_page_url}
                 >
-                  Sau
+                  Next
                 </Button>
               </Flex>
             )}
