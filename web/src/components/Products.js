@@ -55,16 +55,7 @@ export default function Products() {
     [addToCart, authenticated, redirectWhenNoAuth, toggleCartOpen]
   );
 
-  return isLoading ? (
-    <Flex
-      w="full"
-      h="full"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Spinner mt="10rem" />
-    </Flex>
-  ) : (
+  return (
     <Box p="60px 0">
       <Box maxW="70rem" m="0 auto" p="0 5rem">
         <Flex alignItems="center" gap={4}>
@@ -81,114 +72,127 @@ export default function Products() {
           </Flex>
         </Flex>
       </Box>
-      <Box mt="30px">
-        <Box maxW="70rem" m="0 auto" p="0 5rem">
-          <Flex flexWrap="wrap" columnGap="28px" rowGap="28px">
-            {products.data.map((product, i) => {
-              const { id, name, price, image } = product;
-              return (
-                <Box
-                  cursor="pointer"
-                  key={`product-${i + 1}`}
-                  w="calc(25% - 28px * 3 / 4)"
-                  maxW="calc(25% - 28px * 3 / 4)"
-                  flexGrow={1}
-                  flexShrink={0}
-                  onClick={(e) => handleClickProduct(e, id)}
-                >
-                  <Box h="full" position="relative">
-                    <Flex
-                      h="full"
-                      flexDir="column"
-                      border="1px solid rgb(14, 27, 77)"
-                      borderRadius="2xl"
-                      position="relative"
-                    >
+      {isLoading ? (
+        <Flex
+          w="full"
+          h="full"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Spinner mt="10rem" />
+        </Flex>
+      ) : (
+        <Box mt="30px">
+          <Box maxW="70rem" m="0 auto" p="0 5rem">
+            <Flex flexWrap="wrap" columnGap="28px" rowGap="28px">
+              {products.data.map((product, i) => {
+                const { id, name, price, image } = product;
+                return (
+                  <Box
+                    cursor="pointer"
+                    key={`product-${i + 1}`}
+                    w="calc(25% - 28px * 3 / 4)"
+                    maxW="calc(25% - 28px * 3 / 4)"
+                    flexGrow={1}
+                    flexShrink={0}
+                    onClick={(e) => handleClickProduct(e, id)}
+                  >
+                    <Box h="full" position="relative">
                       <Flex
-                        w="full"
-                        alignItems="stretch"
-                        overflow="hidden"
+                        h="full"
+                        flexDir="column"
+                        border="1px solid rgb(14, 27, 77)"
+                        borderRadius="2xl"
                         position="relative"
-                        height="200px"
                       >
-                        <Box
+                        <Flex
+                          w="full"
+                          alignItems="stretch"
                           overflow="hidden"
-                          zIndex={0}
-                          m="10px"
-                          w="calc(100% - 2 * 10px)"
-                          bottom={0}
-                          top={0}
-                          position="absolute"
+                          position="relative"
+                          height="200px"
                         >
                           <Box
-                            w="full"
-                            bottom={0}
-                            position="absolute"
-                            top={0}
                             overflow="hidden"
+                            zIndex={0}
+                            m="10px"
+                            w="calc(100% - 2 * 10px)"
+                            bottom={0}
+                            top={0}
+                            position="absolute"
                           >
-                            <Image
-                              src={image}
-                              objectFit="cover"
+                            <Box
+                              w="full"
+                              bottom={0}
                               position="absolute"
                               top={0}
-                              left={0}
-                              h="full"
-                              w="full"
-                              maxW="full"
-                            />
+                              overflow="hidden"
+                            >
+                              <Image
+                                src={image}
+                                objectFit="cover"
+                                position="absolute"
+                                top={0}
+                                left={0}
+                                h="full"
+                                w="full"
+                                maxW="full"
+                              />
+                            </Box>
                           </Box>
-                        </Box>
-                      </Flex>
-                      <Flex
-                        w="full"
-                        flexDir="column"
-                        p="10px"
-                        pt={0}
-                        flexGrow={1}
-                      >
-                        <Flex pb={3} flexDir="column">
-                          <Text fontWeight="bold">{name}</Text>
-                          <Text>${price}</Text>
                         </Flex>
-                        <Button
-                          onClick={() =>
-                            handleClickAddToCart(product)
-                          }
+                        <Flex
+                          w="full"
+                          flexDir="column"
+                          p="10px"
+                          pt={0}
+                          flexGrow={1}
                         >
-                          Add to cart
-                        </Button>
+                          <Flex pb={3} flexDir="column">
+                            <Text fontWeight="bold">{name}</Text>
+                            <Text>${price}</Text>
+                          </Flex>
+                          <Button
+                            onClick={() =>
+                              handleClickAddToCart(product)
+                            }
+                          >
+                            Add to cart
+                          </Button>
+                        </Flex>
                       </Flex>
-                    </Flex>
+                    </Box>
                   </Box>
-                </Box>
-              );
-            })}
-          </Flex>
-          {!isLoading && products?.data?.length === 0 ? (
-            <Box textAlign="center" p="20px	100px" color="gray.800">
-              No products yet
-            </Box>
-          ) : (
-            <Flex justifyContent="space-between" py={4}>
-              <Button
-                leftIcon={<HiChevronLeft />}
-                onClick={() => setPage((old) => Math.max(old - 1, 0))}
-                isDisabled={!products?.prev_page_url}
-              >
-                Previous
-              </Button>
-              <Button
-                rightIcon={<HiChevronRight />}
-                onClick={() => setPage((old) => old + 1)}
-                isDisabled={!products?.next_page_url}
-              >
-                Next
-              </Button>
+                );
+              })}
             </Flex>
-          )}
+            {!isLoading && products?.data?.length === 0 ? (
+              <Box textAlign="center" p="20px	100px" color="gray.800">
+                No products yet
+              </Box>
+            ) : (
+              <Flex justifyContent="space-between" py={4}>
+                <Button
+                  leftIcon={<HiChevronLeft />}
+                  onClick={() =>
+                    setPage((old) => Math.max(old - 1, 0))
+                  }
+                  isDisabled={!products?.prev_page_url}
+                >
+                  Previous
+                </Button>
+                <Button
+                  rightIcon={<HiChevronRight />}
+                  onClick={() => setPage((old) => old + 1)}
+                  isDisabled={!products?.next_page_url}
+                >
+                  Next
+                </Button>
+              </Flex>
+            )}
+          </Box>
         </Box>
-      </Box>
+      )}
     </Box>
   );
 }
