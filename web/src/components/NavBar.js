@@ -46,8 +46,6 @@ export default function NavBar() {
     });
   }, [history, resetCart, setCurrentUser]);
 
-  console.log(cart.total);
-
   return (
     <Box bg="primaryColor" color="lightTextColor">
       <Box
