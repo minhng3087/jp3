@@ -11,11 +11,12 @@ import {
   Text,
   Th,
   Thead,
-  Tr
+  Tr,
+  IconButton
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import OrderAPI from '../api/OrderAPI';
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
+import { HiChevronLeft, HiChevronRight, HiOutlineEye } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 
 export default function MyOrders() {
@@ -65,7 +66,7 @@ export default function MyOrders() {
                         <Td>{order.id}</Td>
                         <Td>{order.total_price}</Td>
                         <Td>
-                          <Button
+                          {/* <Button
                             variant="link"
                             onClick={() =>
                               history(`/orders/${order.id}`)
@@ -73,7 +74,13 @@ export default function MyOrders() {
                             color="primaryColor"
                           >
                             See detail
-                          </Button>
+                          </Button> */}
+                           <IconButton
+                            onClick={() =>
+                              history(`/orders/${order.id}`)
+                            }
+                            icon={<HiOutlineEye />}
+                          />
                         </Td>
                       </Tr>
                     ))}

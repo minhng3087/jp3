@@ -18,8 +18,6 @@ export default function DetailOrder() {
     OrderAPI.userGetDetailOrder(id)
   );
 
-  console.log(data);
-
   if (isLoading) {
     return (
       <Flex
