@@ -26,8 +26,30 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    public function adminGetAllProducts() {
+        $products = Product::orderBy('created_at', 'desc')
+            ->simplePaginate(6);
+
+        return response()->json($products);
+    }
+
     public function getSingleProduct($id) {
         $product = Product::findOrFail($id);
         return response()->json($product);
+    }
+
+    public function adminAddProduct(Request $request) {
+        try {
+            Product::create($request->all());
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully added new product'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Add new product failed'
+            ]);
+        }
     }
 }

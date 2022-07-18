@@ -82,7 +82,7 @@ export default function OrdersManager() {
               <Thead>
                 <Tr>
                   <Th>ID</Th>
-                  <Th>Orderer name</Th>
+                  <Th>User</Th>
                   <Th>Email</Th>
                   <Th>Phone number</Th>
                   <Th>Address</Th>
@@ -102,7 +102,7 @@ export default function OrdersManager() {
                 <Tbody>
                   {data?.data?.length > 0 &&
                     data.data.map((order, i) => (
-                      <Tr key={`user-${i + 1}`}>
+                      <Tr key={`order-${i + 1}`}>
                         <Td>{order.id}</Td>
                         <Td>{order.user.name}</Td>
                         <Td>{order.user.email}</Td>

@@ -20,10 +20,6 @@ export default function DetailOrderModal({
   onClose,
   selectedOrder
 }) {
-  console.log(1);
-  console.log(selectedOrder);
-  console.log(1);
-  // return 1;
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <ModalOverlay />

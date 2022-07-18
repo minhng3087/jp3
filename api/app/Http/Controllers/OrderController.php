@@ -24,7 +24,10 @@ class OrderController extends Controller
     }
 
     public function userGetAllOrders() {
-        $orders = Order::where('user_id', auth()->id())->simplePaginate(10);
+        $orders = Order::with([
+            'order_details.product:id,name,image'
+        ])
+            ->where('user_id', auth()->id())->simplePaginate(10);
         return response()->json($orders);
     }
 
