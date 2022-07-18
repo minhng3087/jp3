@@ -69,7 +69,7 @@ export default function NavBar() {
   return (
     <Box bg="primaryColor" color="lightTextColor">
       <Box
-        p="20px 5rem 8px"
+        p="20px 5rem 20px"
         display="grid"
         gridTemplateColumns="1fr 2fr 1fr"
         alignItems="center"
@@ -98,9 +98,11 @@ export default function NavBar() {
             </InputRightElement>
           </InputGroup>
         </Flex>
-        <Text justifySelf="center" fontWeight="bold" fontSize="xl">
-          Shopping Cart
-        </Text>
+        <Link as={NavLink} to="/" justifySelf="center">
+          <Text fontWeight="bold" fontSize="xl">
+            Shopping Cart
+          </Text>
+        </Link>
         <Flex justifySelf="right" alignItems="center" gap={3}>
           <Box position="relative">
             <IconButton
@@ -145,7 +147,7 @@ export default function NavBar() {
             </Link>
           )}
         </Flex>
-        <Box gridColumn="2/3" justifySelf="center" mt={1}>
+        {/* <Box gridColumn="2/3" justifySelf="center" mt={1}>
           <Flex>
             <Link as={NavLink} to="/" p="0.5rem">
               Home
@@ -160,7 +162,7 @@ export default function NavBar() {
               Happy page
             </Link>
           </Flex>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

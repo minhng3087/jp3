@@ -34,10 +34,22 @@ export default function DetailOrder() {
   if (data) {
     return (
       <Box p="60px 0">
-        <Box maxW="70rem" m="0 auto" p="0 5rem">
-          <Flex px={5} w="40%" bg="blackAlpha.50" flexDir="column">
+        <Flex
+          maxW="70rem"
+          m="0 auto"
+          p="0 5rem"
+          h="600px"
+          justifyContent="flex-end"
+        >
+          <Flex
+            p={5}
+            w="40%"
+            bg="blackAlpha.50"
+            flexDir="column"
+            h="full"
+            justifyContent="space-between"
+          >
             <Flex
-              mt="60px"
               flexDir="column"
               w="full"
               gap={4}
@@ -83,22 +95,30 @@ export default function DetailOrder() {
                 );
               })}
             </Flex>
-            <Divider borderColor="gray.300" my={3} />
-            <Flex justifyContent="space-between" alignItems="center">
-              <Text color="gray.500" fontSize="sm">
-                Shipping fee
-              </Text>
-              <Text color="gray.500">$10</Text>
-            </Flex>
-            <Divider borderColor="gray.300" my={3} />
-            <Flex justifyContent="space-between" alignItems="center">
-              <Text color="gray.500" fontSize="lg">
-                Total
-              </Text>
-              <Text color="gray.500">${data.total_price}</Text>
+            <Flex flexDir="column">
+              <Divider borderColor="gray.300" my={3} />
+              <Flex
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Text color="gray.500" fontSize="sm">
+                  Shipping fee
+                </Text>
+                <Text color="gray.500">$10</Text>
+              </Flex>
+              <Divider borderColor="gray.300" my={3} />
+              <Flex
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Text color="gray.500" fontSize="lg">
+                  Total
+                </Text>
+                <Text color="gray.500">${data.total_price}</Text>
+              </Flex>
             </Flex>
           </Flex>
-        </Box>
+        </Flex>
       </Box>
     );
   }
