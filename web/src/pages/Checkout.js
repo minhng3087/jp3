@@ -23,7 +23,7 @@ const SHIPPING_FEE = 10;
 export default function Checkout() {
   const history = useNavigate();
   const toast = useToast();
-  const { cart, getTotalAmount } = useCartContext();
+  const { cart, getTotalAmount, resetCart } = useCartContext();
   const { currentUser } = useUserAuthContext();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,6 +41,7 @@ export default function Checkout() {
       setIsSubmitting(true);
       OrderAPI.createOrder(data)
         .then((response) => {
+          resetCart();
           setIsSubmitting(false);
           toast({
             title: response.message,
@@ -58,7 +59,7 @@ export default function Checkout() {
           });
         });
     },
-    [cart.products, getTotalAmount, history, toast]
+    [cart.products, getTotalAmount, history, resetCart, toast]
   );
 
   return (
