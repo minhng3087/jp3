@@ -27,7 +27,7 @@ class ProductController extends Controller
     }
 
     public function adminGetAllProducts() {
-        $products = Product::orderBy('created_at', 'desc')
+        $products = Product::orderBy('id')
             ->simplePaginate(6);
 
         return response()->json($products);

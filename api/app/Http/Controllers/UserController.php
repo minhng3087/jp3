@@ -40,8 +40,4 @@ class UserController extends Controller
 
         return response()->json($user, 200);
     }
-
-    public function index() {
-        return 1;
-    }
 }
