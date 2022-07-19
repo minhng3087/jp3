@@ -29,8 +29,9 @@ export default function ProductsManager() {
   const [page, setPage] = useState(1);
   const [isOpenProductFormDrawer, setIsOpenProductFormDrawer] =
     useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const { isLoading, data } = useQuery(
+  const { isLoading, data, refetch } = useQuery(
     ['adminGetAllProducts', page],
     () => ProductAPI.adminGetAllProducts(page)
   );
@@ -39,13 +40,22 @@ export default function ProductsManager() {
     setIsOpenProductFormDrawer((prev) => !prev);
   }, []);
 
-  console.log(data);
+  const handleClickEditProduct = useCallback(
+    (product) => {
+      setSelectedProduct(product);
+      toggleProductFormDrawer();
+    },
+    [toggleProductFormDrawer]
+  );
 
   return (
     <>
       <ProductFormDrawer
         isOpen={isOpenProductFormDrawer}
         onClose={toggleProductFormDrawer}
+        selectedProduct={selectedProduct}
+        setSelectedProduct={setSelectedProduct}
+        refetch={refetch}
       />
       <Box
         paddingTop={8}
@@ -106,7 +116,9 @@ export default function ProductsManager() {
                         <Td>{product.description}</Td>
                         <Td>
                           <IconButton
-                            onClick={() => {}}
+                            onClick={() =>
+                              handleClickEditProduct(product)
+                            }
                             icon={<HiOutlinePencilAlt />}
                           />
                         </Td>
@@ -117,7 +129,7 @@ export default function ProductsManager() {
             </Table>
             {!isLoading && data?.data?.length === 0 ? (
               <Box textAlign="center" p="20px	100px" color="gray.800">
-                No orders yet
+                No products yet
               </Box>
             ) : (
               <Flex justifyContent="space-between" px={6} py={2}>

@@ -33,6 +33,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/orders/{id}', [OrderController::class, 'adminGetOrderDetail']);
         Route::get('/products', [ProductController::class, 'adminGetAllProducts']);
         Route::post('/addProduct', [ProductController::class, 'adminAddProduct']);
-        Route::post('/orders/{id}/status', [OrderController::class, 'changeStatusOrder']);
+        Route::post('/updateProduct', [ProductController::class, 'adminUpdateProduct']);
     });
 });

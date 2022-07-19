@@ -19,7 +19,13 @@ import {
 import { useForm } from 'react-hook-form';
 import ProductAPI from '../api/ProductAPI';
 
-export default function ProductFormDrawer({ isOpen, onClose }) {
+export default function ProductFormDrawer({
+  isOpen,
+  onClose,
+  selectedProduct,
+  setSelectedProduct,
+  refetch
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toast = useToast();
@@ -27,6 +33,7 @@ export default function ProductFormDrawer({ isOpen, onClose }) {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors }
   } = useForm();
 
@@ -37,36 +44,70 @@ export default function ProductFormDrawer({ isOpen, onClose }) {
 
   const onSubmit = useCallback(
     (data) => {
-      setIsSubmitting(true);
-      ProductAPI.adminAddProduct(data)
-        .then((response) => {
-          setIsSubmitting(false);
-          toast({
-            title: response.message,
-            duration: 3000,
-            status: response.success ? 'success' : 'error'
+      if (!selectedProduct) {
+        setIsSubmitting(true);
+        ProductAPI.adminAddProduct(data)
+          .then((response) => {
+            setIsSubmitting(false);
+            toast({
+              title: response.message,
+              duration: 3000,
+              status: response.success ? 'success' : 'error'
+            });
+            if (response.success) {
+              handleCloseDrawer();
+            }
+          })
+          .catch(() => {
+            setIsSubmitting(false);
+            toast({
+              title: 'An unknown error occurred',
+              duration: 3000,
+              status: 'error'
+            });
           });
-          if (response.success) {
-            handleCloseDrawer();
-          }
-        })
-        .catch(() => {
-          setIsSubmitting(false);
-          toast({
-            title: 'An unknown error occurred',
-            duration: 3000,
-            status: 'error'
+      } else {
+        setIsSubmitting(true);
+        data.id = selectedProduct.id;
+        ProductAPI.updateProduct(data)
+          .then((response) => {
+            setIsSubmitting(false);
+            toast({
+              title: response.message,
+              duration: 3000,
+              status: response.success ? 'success' : 'error'
+            });
+            if (response.success) {
+              handleCloseDrawer();
+              refetch();
+            }
+          })
+          .catch(() => {
+            setIsSubmitting(false);
+            toast({
+              title: 'An unknown error occurred',
+              duration: 3000,
+              status: 'error'
+            });
           });
-        });
+      }
     },
-    [handleCloseDrawer, toast]
+    [handleCloseDrawer, refetch, selectedProduct, toast]
   );
 
+  console.log(selectedProduct);
+
   useEffect(() => {
+    if (selectedProduct) {
+      setValue('name', selectedProduct.name);
+      setValue('price', selectedProduct.price);
+      setValue('description', selectedProduct.description);
+      setValue('image', selectedProduct.image);
+    }
     return () => {
       reset();
     };
-  }, [reset]);
+  }, [reset, selectedProduct, setSelectedProduct, setValue]);
 
   return (
     <Drawer
@@ -155,7 +196,7 @@ export default function ProductFormDrawer({ isOpen, onClose }) {
               type="submit"
               isLoading={isSubmitting}
             >
-              Add
+              {selectedProduct ? 'Update' : 'Add'}
             </Button>
           </DrawerFooter>
         </DrawerContent>

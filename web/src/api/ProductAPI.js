@@ -1,6 +1,7 @@
 import {
   ADMIN_ADD_PRODUCT_ENDPOINT,
   ADMIN_GET_ALL_PRODUCTS_ENDPOINT,
+  ADMIN_UPDATE_PRODUCT_ENDPOINT,
   GET_ALL_PRODUCTS_ENDPOINT,
   GET_SINGLE_PRODUCT_ENDPOINT
 } from '../constants/endpoints';
@@ -45,6 +46,20 @@ class ProductAPI {
   static async getSingleProduct(id) {
     const response = await instanceAxios.get(
       `${GET_SINGLE_PRODUCT_ENDPOINT}${id}`
+    );
+    return response.data;
+  }
+
+  static async updateProduct(data) {
+    const token = getAdminToken();
+    const response = await instanceAxios.post(
+      ADMIN_UPDATE_PRODUCT_ENDPOINT,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
     );
     return response.data;
   }

@@ -52,4 +52,26 @@ class ProductController extends Controller
             ]);
         }
     }
+
+    public function adminUpdateProduct(Request $request) {
+        $product = Product::find($request['id']);
+
+        $product->name = $request['name'];
+        $product->price = $request['price'];
+        $product->description = $request['description'];
+        $product->image = $request['image'];
+
+        try {
+            $product->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Successfully updated product'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Update product failed'
+            ]);
+        }
+    }
 }
