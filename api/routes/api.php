@@ -34,5 +34,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/products', [ProductController::class, 'adminGetAllProducts']);
         Route::post('/addProduct', [ProductController::class, 'adminAddProduct']);
         Route::post('/updateProduct', [ProductController::class, 'adminUpdateProduct']);
+        Route::post('/changeOrderStatus', [OrderController::class, 'changeOrderStatus']);
     });
 });

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import NotFound from '../components/NotFound';
 import { useAdminAuthContext } from '../contexts/AdminAuthContext';
 import AdminLogIn from '../pages/AdminLogIn';
 import FullPageSpinner from '../pages/FullPageSpinner';
@@ -56,10 +55,6 @@ export default function AdminFrame() {
           }
         />
       </Route>
-      <Route
-        path="*"
-        element={<NotFound message="Page not found" />}
-      />
     </Routes>
   );
 }

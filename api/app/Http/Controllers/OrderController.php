@@ -39,11 +39,14 @@ class OrderController extends Controller
         return response()->json($order_detail);
     }
 
-    public function changeStatusOrder(Request $request, $id) {
-        $order = Order::find($id)->update([
-            'status' =>  $request->status,
+    public function changeOrderStatus(Request $request) {
+        $order = Order::find($request['id'])->update([
+            'status' =>  $request['status'],
         ]);
-        return response()->json($order);
+        return response()->json([
+            'success' => true,
+            'message' => 'Change order status successfully'
+        ]);
     }
 
     public function createOrder(Request $request) {

@@ -106,6 +106,7 @@ class UserAuthController extends Controller
                 'user_access_token' => $token,
                 'expires_in' => auth()->factory()->getTTL() * 60
             ],
-            'user' => auth()->user()]);
+            'user' => auth()->user()
+        ]);
     }
 }

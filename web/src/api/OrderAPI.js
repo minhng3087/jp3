@@ -1,5 +1,6 @@
 import {
-	ADMIN_GET_ALL_ORDERS_ENDPOINT,
+  ADMIN_CHANGE_ORDER_STATUS_ENDPOINT,
+  ADMIN_GET_ALL_ORDERS_ENDPOINT,
   ADMIN_GET_DETAIL_ORDER_ENDPOINT,
   USER_CREATE_ORDER_ENDPOINT,
   USER_GET_ALL_ORDERS_ENDPOINT,
@@ -67,6 +68,20 @@ class OrderAPI {
     const token = getUserToken();
     const response = await instanceAxios.get(
       `${ADMIN_GET_DETAIL_ORDER_ENDPOINT}${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    return response.data;
+  }
+
+  static async adminChangeOrderStatus(data) {
+    const token = getAdminToken();
+    const response = await instanceAxios.post(
+      ADMIN_CHANGE_ORDER_STATUS_ENDPOINT,
+      data,
       {
         headers: {
           Authorization: `Bearer ${token}`

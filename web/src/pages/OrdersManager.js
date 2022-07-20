@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   Flex,
@@ -21,7 +22,14 @@ import {
 } from 'react-icons/hi';
 import { useQuery } from 'react-query';
 import OrderAPI from '../api/OrderAPI';
+import ChangeOrderStatusPopover from '../components/ChangeOrderStatusPopover';
 import DetailOrderModal from '../components/DetailOrderModal';
+
+const orderStatuses = [
+  { label: 'new', color: 'purple' },
+  { label: 'processing', color: 'blue' },
+  { label: 'completed', color: 'green' }
+];
 
 export default function OrdersManager() {
   const [page, setPage] = useState(1);
@@ -29,7 +37,7 @@ export default function OrdersManager() {
     useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  const { isLoading, data } = useQuery(
+  const { isLoading, data, refetch } = useQuery(
     ['adminGetAllOrders', page],
     () => OrderAPI.adminGetAllOrders(page),
     { keepPreviousData: true }
@@ -80,6 +88,7 @@ export default function OrdersManager() {
               <Thead>
                 <Tr>
                   <Th>ID</Th>
+                  <Th>Status</Th>
                   <Th>User</Th>
                   <Th>Email</Th>
                   <Th>Phone number</Th>
@@ -102,18 +111,39 @@ export default function OrdersManager() {
                     data.data.map((order, i) => (
                       <Tr key={`order-${i + 1}`}>
                         <Td>{order.id}</Td>
+                        <Td>
+                          <Badge
+                            colorScheme={
+                              orderStatuses[
+                                parseInt(order.status - 1)
+                              ].color
+                            }
+                          >
+                            {
+                              orderStatuses[
+                                parseInt(order.status - 1)
+                              ].label
+                            }
+                          </Badge>
+                        </Td>
                         <Td>{order.user.name}</Td>
                         <Td>{order.user.email}</Td>
                         <Td>{order.phone}</Td>
                         <Td>{order.address}</Td>
                         <Td>{order.total_price}</Td>
                         <Td>
-                          <IconButton
-                            onClick={() =>
-                              handleClickSeeDetail(order)
-                            }
-                            icon={<HiOutlineEye />}
-                          />
+                          <Flex gap={2}>
+                            <IconButton
+                              onClick={() =>
+                                handleClickSeeDetail(order)
+                              }
+                              icon={<HiOutlineEye />}
+                            />
+                            <ChangeOrderStatusPopover
+                              selectedOrder={order}
+                              refetch={refetch}
+                            />
+                          </Flex>
                         </Td>
                       </Tr>
                     ))}

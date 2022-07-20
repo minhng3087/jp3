@@ -95,8 +95,6 @@ export default function ProductFormDrawer({
     [handleCloseDrawer, refetch, selectedProduct, toast]
   );
 
-  console.log(selectedProduct);
-
   useEffect(() => {
     if (selectedProduct) {
       setValue('name', selectedProduct.name);

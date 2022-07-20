@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import {
+  Badge,
   Box,
   Button,
   Flex,
@@ -17,6 +18,12 @@ import { useQuery } from 'react-query';
 import OrderAPI from '../api/OrderAPI';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import DetailOrderModal from '../components/DetailOrderModal';
+
+const orderStatuses = [
+  { label: 'new', color: 'purple' },
+  { label: 'processing', color: 'blue' },
+  { label: 'completed', color: 'green' }
+];
 
 export default function MyOrders() {
   const [page, setPage] = useState(1);
@@ -66,6 +73,7 @@ export default function MyOrders() {
                 <Thead>
                   <Tr>
                     <Th>ID</Th>
+                    <Th>Status</Th>
                     <Th>Total price</Th>
                     <Th>Action</Th>
                   </Tr>
@@ -84,6 +92,21 @@ export default function MyOrders() {
                       data.data.map((order, i) => (
                         <Tr key={`user-${i + 1}`}>
                           <Td>{order.id}</Td>
+                          <Td>
+                            <Badge
+                              colorScheme={
+                                orderStatuses[
+                                  parseInt(order.status - 1)
+                                ].color
+                              }
+                            >
+                              {
+                                orderStatuses[
+                                  parseInt(order.status - 1)
+                                ].label
+                              }
+                            </Badge>
+                          </Td>
                           <Td>{order.total_price}</Td>
                           <Td>
                             <Button
