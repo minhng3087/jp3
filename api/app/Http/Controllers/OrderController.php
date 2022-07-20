@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Validator;
 class OrderController extends Controller
 {
     public function adminGetAllOrders() {
-        $orders = Order::with(['user', 'order_details','order_details.product:id,name,image'])->simplePaginate(10);
+        $orders = Order::with(['user', 'order_details','order_details.product:id,name,image'])
+            ->orderBy('created_at', 'desc')
+            ->simplePaginate(10);
         return response()->json($orders);
     }
 

@@ -7,7 +7,6 @@ import CartProvider from './contexts/CartContext';
 import UserAuthProvider from './contexts/UserAuthContext';
 import WebProvider from './contexts/WebContext';
 import AdminAuthProvider from './contexts/AdminAuthContext';
-import AdminFrame from './layouts/AdminFrame';
 
 const queryClient = new QueryClient();
 
@@ -34,15 +33,14 @@ export default function App() {
     <ChakraProvider theme={theme}>
       <Router>
         <QueryClientProvider client={queryClient}>
-          <UserAuthProvider>
-            <WebProvider>
-              <CartProvider>
-                <AppFrame />
-              </CartProvider>
-            </WebProvider>
-          </UserAuthProvider>
           <AdminAuthProvider>
-            <AdminFrame />
+            <UserAuthProvider>
+              <WebProvider>
+                <CartProvider>
+                  <AppFrame />
+                </CartProvider>
+              </WebProvider>
+            </UserAuthProvider>
           </AdminAuthProvider>
         </QueryClientProvider>
       </Router>
